@@ -201,6 +201,10 @@ class Core:
 
         try:
             self.handle(project, options)
+        except BrokenPipeError:
+            print("broken pipe error occurred", file=sys.stderr)
+            os.dup2(sys.stderr.fileno(), sys.stdout.fileno())
+            sys.exit(1)
         except Exception:
             etype, err, traceback = sys.exc_info()
             should_show_tb = not isinstance(err, PdmUsageError)
